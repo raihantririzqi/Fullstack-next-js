@@ -18,6 +18,7 @@ const DialogCreate = () => {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
     const route = useRouter();
 
     const handleClick = async (e: any) => {
@@ -43,13 +44,14 @@ const DialogCreate = () => {
             });
 
         setIsLoading(false);
+        setIsOpen(false);
 
         route.refresh();
     };
     return (
-        <Dialog>
+        <Dialog open={isOpen}>
             <DialogTrigger asChild>
-                <Button variant="blue">Create</Button>
+                <Button variant="blue" onClick={() => setIsOpen(true)}>Create</Button>
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>

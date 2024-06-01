@@ -18,19 +18,39 @@ interface DialogUpdateProps{
     id: number;
 }
 
-const DialogUpdate: React.FC<DialogUpdateProps> = ({ id }) => {
+const DialogUpdate = ({ id } : DialogUpdateProps) => {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
     const route = useRouter();
 
+    const getPost = async () => {
+        setIsOpen(true);
+        const res = await fetch(`api/post/${id}`);
+        const json = await res.json();
+        setTitle(json.post.title);
+        setContent(json.post.content);
+    }
+
     const handleClick = async () => {
-        console.log(id);
+        const res = await fetch(`/api/post/${id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                title,
+                content,
+            }),
+        })
+        setIsOpen(false);
+        route.refresh();
     }
     return (
-        <Dialog>
+        <Dialog open={isOpen}>
             <DialogTrigger asChild>
-                <Button variant="green">Update</Button>
+                <Button variant="green" onClick={getPost}>Update</Button>
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
